@@ -4,6 +4,7 @@
 * - Copy*
 - Documents*
 *.dev
+config/config.php
 
 # composer files
 vendor
