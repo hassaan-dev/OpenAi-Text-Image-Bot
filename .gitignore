@@ -1,0 +1,16 @@
+# custom files
+.DS_Store
+*.bak
+* - Copy*
+- Documents*
+*.dev
+
+# composer files
+vendor
+composer.lock
+
+
+# IDE Files
+#-------------------------
+/nbproject/
+.idea/*
