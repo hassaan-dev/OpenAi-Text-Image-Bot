@@ -2,20 +2,23 @@
 
 namespace App\Service\ChatGPT;
 
+use App\Helper\Curl;
 use App\Helper\Debug;
 
 class Client
 {
     private $apiKey;
+    private $curl;
 
     public function __construct($apiKey)
     {
         $this->apiKey = $apiKey;
+        $this->curl = new Curl();
     }
 
     public function getTextResponse($userInput)
     {
-        $url = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+        $url = 'https://api.openai.com/v1/engines/gpt-3.5-turbo-instruct/completions';
 
         $headers = [
             'Content-Type: application/json',
@@ -28,20 +31,7 @@ class Client
             'max_tokens' => 150,
         ];
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $response = curl_exec($ch);
-
-        if ($response === false) {
-            die(curl_error($ch));
-        }
-
-        curl_close($ch);
-
+        $response = $this->curl->post($url, $data, $headers);
         $responseData = json_decode($response, true);
 
         return $responseData['choices'][0]['text'] ?? '--';
@@ -64,19 +54,7 @@ class Client
             "size" => "1024x1024" // dall-e-3 available options: 1024x1024, 1792x1024, or 1024x1792
         ];
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $response = curl_exec($ch);
-
-        if ($response === false) {
-            die(curl_error($ch));
-        }
-
-        curl_close($ch);
+        $response = $this->curl->post($url, $data, $headers);
 
         $responseData = json_decode($response, true);
 
