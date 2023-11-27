@@ -16,6 +16,9 @@ class Client
         $this->curl = new Curl();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getTextResponse($userInput)
     {
         $url = 'https://api.openai.com/v1/engines/gpt-3.5-turbo-instruct/completions';
@@ -31,12 +34,15 @@ class Client
             'max_tokens' => 150,
         ];
 
-        $response = $this->curl->post($url, $data, $headers);
+        $response = $this->curl->post($url, $data, $headers, true);
         $responseData = json_decode($response, true);
 
         return $responseData['choices'][0]['text'] ?? '--';
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getImageResponse($userInput)
     {
         $url = 'https://api.openai.com/v1/images/generations';
@@ -54,7 +60,7 @@ class Client
             "size" => "1024x1024" // dall-e-3 available options: 1024x1024, 1792x1024, or 1024x1792
         ];
 
-        $response = $this->curl->post($url, $data, $headers);
+        $response = $this->curl->post($url, $data, $headers, true);
 
         $responseData = json_decode($response, true);
 

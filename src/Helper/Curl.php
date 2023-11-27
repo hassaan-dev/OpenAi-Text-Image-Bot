@@ -2,19 +2,54 @@
 
 namespace App\Helper;
 
+use Exception;
+
 class Curl
 {
+    /**
+     * @throws Exception
+     */
     public function get($url, $headers = [])
     {
         return $this->request('GET', $url, [], $headers);
     }
 
-    public function post($url, $data = [], $headers = [])
+    /**
+     * @throws Exception
+     */
+    public function post($url, $data = [], $headers = [], $encodeAsJson = false)
     {
-        return $this->request('POST', $url, $data, $headers);
+        return $this->request('POST', $url, $data, $headers, $encodeAsJson);
     }
 
-    private function request($method, $url, $data = [], $headers = [])
+    /**
+     * @throws Exception
+     */
+    public function patch($url, $data = [], $headers = [], $encodeAsJson = false)
+    {
+        return $this->request('PATCH', $url, $data, $headers, $encodeAsJson);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function put($url, $data = [], $headers = [], $encodeAsJson = false)
+    {
+        return $this->request('PUT', $url, $data, $headers, $encodeAsJson);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function delete($url, $headers = [])
+    {
+        return $this->request('DELETE', $url, [], $headers);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function request($method, $url, $data = [], $headers = [], $encodeAsJson = false)
     {
         $ch = curl_init();
 
@@ -24,9 +59,13 @@ class Curl
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
         // Set method-specific options
-        if ($method === 'POST') {
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        if ($method !== 'GET') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+
+            if (!empty($data)) {
+                $postData = $encodeAsJson ? json_encode($data) : http_build_query($data);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            }
         }
 
         // Set headers
@@ -47,5 +86,4 @@ class Curl
 
         return $response;
     }
-
 }

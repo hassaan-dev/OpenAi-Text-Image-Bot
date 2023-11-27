@@ -223,16 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     function startOver() {
-
         window.location.reload();
-
-        // Implement the logic to reset the chat or any other action needed
-        // For example, you might clear the chat log and input field
-        document.getElementById('chat-log').innerHTML = '';
-        document.getElementById('user-input-text').value = '';
-
-        // Optionally, you can also focus on the input field after starting over
-        document.getElementById('user-input-text').focus();
     }
 
     // Function to check if the response is code-like
@@ -251,6 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     function nl2br(str, replaceMode, isXhtml) {
         const breakTag = (isXhtml) ? '<br />' : '<br>';
         const replaceStr = (replaceMode) ? '$1' + breakTag : '$1' + breakTag + '$2';
+
         return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, replaceStr);
     }
 </script>
