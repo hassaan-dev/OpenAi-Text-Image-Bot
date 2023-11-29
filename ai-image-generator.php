@@ -43,11 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 0;
         }
 
-        /*#chat-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }*/
-
         #chat-log {
             padding: 15px;
             border: 1px solid #ccc;
@@ -145,11 +140,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     function sendMessage() {
         const userInput = document.getElementById('user-input-text');
         const userInputText = userInput.value;
+        const chatLog = document.getElementById('chat-log');
 
         // Display user's message immediately
-        // document.getElementById('chat-log').innerHTML += `<div class="d-flex justify-content-end"><div class="message user-message bg-primary text-white mb-2 p-2 rounded"><strong>User: </strong> ${userInput}</div></div>`;
-
-        const chatLog = document.getElementById('chat-log');
         chatLog.innerHTML += `<div class="d-flex justify-content-end"><div class="message user-message bg-primary text-white mb-2 p-2 rounded">${userInputText}</div></div>`;
 
         // Add a placeholder message to the chat log
@@ -226,25 +219,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         window.location.reload();
     }
 
-    // Function to check if the response is code-like
-    function isCode(response) {
-        // Simple check for code-like content using regular expressions
-        const codePatterns = [
-            /^\s*function\s*\([^\)]*\)\s*{/i,  // JavaScript function
-            /^\s*class\s+[A-Za-z_][A-Za-z0-9_]*\s*{/i,  // JavaScript class
-            /<[^>]+>/,  // HTML tags
-            /^\s*#/  // Python comments (you can add more patterns as needed)
-        ];
-
-        return codePatterns.some(pattern => pattern.test(response));
-    }
-
-    function nl2br(str, replaceMode, isXhtml) {
-        const breakTag = (isXhtml) ? '<br />' : '<br>';
-        const replaceStr = (replaceMode) ? '$1' + breakTag : '$1' + breakTag + '$2';
-
-        return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, replaceStr);
-    }
 </script>
 </body>
 </html>
