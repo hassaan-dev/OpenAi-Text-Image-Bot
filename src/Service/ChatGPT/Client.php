@@ -4,6 +4,7 @@ namespace App\Service\ChatGPT;
 
 use App\Helper\Curl;
 use App\Helper\Debug;
+use Exception;
 
 class Client
 {
@@ -17,7 +18,7 @@ class Client
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function getTextResponse($userInput)
     {
@@ -41,7 +42,7 @@ class Client
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function getImageResponse($userInput)
     {
@@ -57,7 +58,7 @@ class Client
             'prompt' => $userInput,
             "n" => 1,
 //            "size" => "256x256" // dall-e-2 available options: 256x256, 512x512, or 1024x1024
-            "size" => "1024x1024" // dall-e-3 available options: 1024x1024, 1792x1024, or 1024x1792
+            "size" => "1792x1024" // dall-e-3 available options: 1024x1024, 1792x1024, or 1024x1792
         ];
 
         $response = $this->curl->post($url, $data, $headers, true);
