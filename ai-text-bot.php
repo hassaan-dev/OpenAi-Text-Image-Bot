@@ -13,10 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userInput = $_POST['user_input'] ?? '';
 
     // Process the user input
-    $response = $chatGPTService->getTextResponse($userInput);
+    try {
+        $response = $chatGPTService->getTextResponse($userInput);
+    } catch (Exception $e) {
+        http_response_code(400);
+        $response = $e->getMessage();
+    }
+
     if ($response == '--') {
         http_response_code(400);
-        $response = 'Sorry, I couldn\'t understand that.';
+        $response = 'Sorry, I could\'t understand that.';
     }
 
     // Output the response
@@ -75,6 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         #user-input-text {
             flex: 1;
             margin-right: 10px;
+            border: 1px solid #b5b5b5;
+            border-radius: 8px;
         }
 
         #user-input-text[disabled] {
@@ -120,9 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="sticky-bottom bg-light">
         <div id="user-input" class="my-2">
             <div class="input-group">
-                <input type="text" id="user-input-text" class="form-control form-control-lg"
-                       placeholder="Type your message..."
-                       onkeydown="handleKeyPress(event)">
+                <label for="user-input-text"></label><input type="text" id="user-input-text"
+                                                            class="form-control form-control-lg"
+                                                            placeholder="Type your message...">
                 <button class="btn btn-primary btn-lg" onclick="sendMessage()">Send</button>
             </div>
         </div>
@@ -136,6 +144,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+
+    // Get the input field
+    let userInput;
+    userInput = document.getElementById('user-input-text');
+
+    // Execute a function when the user presses a key on the keyboard
+    userInput.addEventListener("keypress", function (event) {
+
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            // Cancel the default action, if needed
+            event.preventDefault();
+
+            // Trigger the sendMessage function
+            sendMessage();
+        }
+
+    });
+
     function sendMessage() {
         const userInput = document.getElementById('user-input-text');
         const userInputText = userInput.value;
@@ -209,16 +236,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         };
         xhr.send(`user_input=${encodeURIComponent(userInputText)}`);
-    }
-
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            // Prevent the default behavior of the Enter key (e.g., adding a new line)
-            event.preventDefault();
-
-            // Trigger the sendMessage function
-            sendMessage();
-        }
     }
 
     function startOver() {
