@@ -168,6 +168,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const userInputText = userInput.value;
         const chatLog = document.getElementById('chat-log');
 
+        if (typeof userInputText === "string" && userInputText.length === 0) {
+            alert('Please type the instructions to generate image.');
+            return;
+        }
+
         // Add user message to the chat log
         chatLog.innerHTML += `<div class="d-flex justify-content-end"><div class="message user-message bg-primary text-white mb-2 p-2 rounded">${userInputText}</div></div>`;
 
